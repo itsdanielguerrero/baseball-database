@@ -54,8 +54,8 @@ SELECT CONCAT(players.firstName, ' ', players.lastName) AS fullName,
         teams.abbreviation,
         hittingStats.doubles,
         games.startTime,
-        games.homeTeamId,
-        games.awayTeamId
+        home.mascot              AS homeTeam,
+        away.mascot                AS awayTeam
 FROM players
 		JOIN teams
         ON players.currentTeamId = teams.id
@@ -63,6 +63,10 @@ FROM players
         ON players.id = hittingStats.playerId
         JOIN games
 		ON hittingStats.gameId = games.id
+        JOIN teams AS home                     /* When joining a particular table multiple times use AS to creat temp table */
+        ON games.homeTeamId = home.id
+        JOIN teams AS away
+        ON games.awayTeamId = away.id
 WHERE games.startTime > '2019-06-06' AND games.startTime < '2019-07-06' 
 ORDER BY hittingStats.doubles DESC
 LIMIT 1;
